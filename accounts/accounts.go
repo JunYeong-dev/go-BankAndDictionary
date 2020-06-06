@@ -1,10 +1,15 @@
 package accounts
 
+import "errors"
+
 // Account struct - private와 public은 대소문자로 구분(소문자: private, 대문자: public)
 type Account struct {
 	owner   string
 	balance int
 }
+
+// error를 미리 변수로 정의
+var errNoMoney = errors.New("Can`t withdraw")
 
 // NewAccount - Go에서는 constructor가 없기 때문에 function으로 construct하거나 struct를 만들도록 함
 // struct 인스턴스(*Account)를 생성한 후 pointer-주소(&account)를 return하는 방식으로 constructor역할을 함
@@ -13,7 +18,7 @@ func NewAccount(owner string) *Account {
 	return &account
 }
 
-// Deposit - method, Account의 balance 값을 변경
+// Deposit - method, Account의 balance 값을 변경(+)
 // (a Account) : receiver - a는 이름이고 type은 Account
 // 이름을 짓는 규칙은 struct의 첫 글자를 따서 '소문자'로 지어야 함
 // 기본적으로 Go의 경우 (a Account)의 형태로 recevier로 하는 경우 복사본을 만들게 됨
@@ -26,4 +31,15 @@ func (a *Account) Deposit(amount int) {
 // Balance - Account의 balance 값을 return
 func (a Account) Balance() int {
 	return a.balance
+}
+
+// Withdraw - method, Account의 balance 값을 변경(-)
+// Go에서는 try - catch 가 없기 때문에 직접 error를 return 하고 체크해줘야 한다
+func (a *Account) Withdraw(amount int) error {
+	if a.balance < amount {
+		return errNoMoney
+	}
+	a.balance -= amount
+	// nil - error의 return타입 중 하나로서 다른 언어의 null이나 none과 같음
+	return nil
 }
