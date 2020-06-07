@@ -1,6 +1,9 @@
 package accounts
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // Account struct - private와 public은 대소문자로 구분(소문자: private, 대문자: public)
 type Account struct {
@@ -42,4 +45,19 @@ func (a *Account) Withdraw(amount int) error {
 	a.balance -= amount
 	// nil - error의 return타입 중 하나로서 다른 언어의 null이나 none과 같음
 	return nil
+}
+
+// ChangeOwner - Account의 owner 값을 변경
+func (a *Account) ChangeOwner(newOwner string) {
+	a.owner = newOwner
+}
+
+// Owner - Account의 owner 값을 return
+func (a Account) Owner() string {
+	return a.owner
+}
+
+// Java의 toString()함수와 같다고 생각하면 됨
+func (a Account) String() string {
+	return fmt.Sprint(a.Owner(), "'s account.\nHas: ", a.Balance())
 }
